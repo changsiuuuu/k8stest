@@ -1,0 +1,16 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web-app
+  type: LoadBalancer # 원래는 클라우드 제공자에서 로밸을 프로비전하는 타입
+  ports:
+    - protocol: TCP
+      nodePort: 30002
+      port: 8888
+      targetPort: 80
+  externalIPs: # 클라우드 로드밸런서 외에 명시적으로 트래픽을 수신할 외부 고정ip 지정
+    - 172.16.8.20

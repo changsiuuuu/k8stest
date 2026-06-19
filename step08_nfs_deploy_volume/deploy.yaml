@@ -1,0 +1,33 @@
+# step08_nfs_deploy_volume
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # nginx-deploy 라는 이름의 컨트롤러를 만들겠다
+  name: nginx-deploy
+spec:
+  # 어떤 pod 를 어떤식으로 관리할것인지 명시한다
+  replicas: 2 # 복제 pod 의 개수는 항상 2로 유지하겠다
+  selector:
+    matchLabels:
+      app: web-app # app=web-app 이라는 label 을 가지고 있는 pod 를 대상으로 하겠다
+  # 실행할 pod 의 설계도
+  # 그 전 예제 pod.yaml 에서 metadata부분을 갖고왔다.
+  template:
+    metadata:
+      # pod 를 단독으로 실행했을땐 pod의 이름을 직접 정의할수 있었다
+      # replica가 있는데 동일한 이름으로 여러 팟이 있을 수 없으니깐
+      # pod이름을 name 으로 정의할 수 없다	
+      # name: pod1 대신 lables를 적는다
+      labels: 
+        app: web-app
+    spec:	
+      containers:	
+      - name: nginx-ctn	
+        image: nginx:latest	
+        volumeMounts:
+        - name: persistent-volume	
+          mountPath: /mount01   # 컨테이너 내부의 마운트 경로
+      volumes:
+      - name: persistent-volume	
+        persistentVolumeClaim:  # hostPath나 emptyDir 대신 미리 생성한 PVC를 참조
+          claimName: pvc01     # pvc.yml에서 생성한 PVC 이름

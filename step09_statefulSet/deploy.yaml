@@ -1,0 +1,23 @@
+# step09../deploy.yaml
+apiVersion: apps/v1
+kind: StatefulSet # state를 갖고있는 Deployment
+metadata:
+  name: nginx-deplooy
+spec:
+  serviceName: headless-svc # 연결할 Headless 서비스의 이름을 명시한다
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stateful-nginx
+  template:
+    metadata:
+      labels:
+        app: stateful-nginx
+      # 아까는 뒤에 랜덤하게 이름이 붙었는데 0, 1, 2.. 예상 가능하게 생성이되고 하나를 삭제하면
+      # 그 이름으로 또 만들어진다..
+    spec:
+      containers:
+        - name: nginx-ctn
+          image: nginx:latest
+
+  

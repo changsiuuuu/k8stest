@@ -1,0 +1,18 @@
+# deploy2.yaml
+apiVersion: apps/v1 # pod 는 v1 이지만 deploy에서는 app/v1 이다 정해진것
+kind: Deployment # 리소스의 종류는 Deployment 정해진 예약어이다.
+metadata:
+  name: httpd-deploy
+spec:
+  replicas: 2 # 배포되는 pod 의 개수 설정 default는 1이다
+  selector:
+    matchLabels:
+      app: httpd-app
+  template:
+    metadata:
+      labels:
+        app: httpd-app
+    spec:
+      containers:
+        - name: httpd-ctn
+          image: httpd:alpine

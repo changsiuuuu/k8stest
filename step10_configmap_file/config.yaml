@@ -1,0 +1,21 @@
+# ..file/config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  # 특정 키값으로 여러 줄의 문자열을 저장해놓고 마치 file처럼 활용할 수 있다
+  # key 의 이름은 마음대로 지을 수 있다
+  nginx-conf-file: |
+    user nginx;
+    worker_processes auto;
+    events { worker_connections 1024; }
+    http {
+        server {
+            listen 80;
+            location / {
+                root /usr/share/nginx/html;
+                index index.html;
+            }
+        }
+    }

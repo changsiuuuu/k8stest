@@ -1,0 +1,13 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  # 어떤 pod들을 연결해줄지 선택에 대한 정의한다 selector로
+  selector:
+    app: web-app
+  type: ClusterIP # k8s 클러스터 내부에서만 접근 가능한 기본 서비스 type
+  ports:
+    - protocol: TCP # 생략해도 기본값이 TCP
+      port: 80 # service가 노출할 port 자동으로 targetPort: 80 으로 잡힌다
