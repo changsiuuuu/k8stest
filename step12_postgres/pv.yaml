@@ -1,0 +1,15 @@
+# step12.../pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-postgres-1 # 편의를 위해서 nfs에 만든 폴더명과 일치시킨다
+spec:
+  accessModes:
+    - ReadWriteOnce # 하나의 pod에서만 사용할수 있도록
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain # pvc가 삭제되어도 유지되도록 한다
+  storageClassName: pv-postgres # pvc에서 불러다 쓸때 사용할 클래스명을 붙인다
+  nfs:
+    server: 172.16.8.203
+    path: /nfs/shared/pv-postgres-1
