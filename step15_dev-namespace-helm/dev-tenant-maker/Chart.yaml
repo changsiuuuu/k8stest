@@ -1,0 +1,7 @@
+# dev-tenant-maker/Chart.yaml (values.yaml 과 같은위치)
+apiVersion: v2
+name: dev-tenant-maker
+description: k8s 멀티 테넌시 자동 생성 # 차트에 대한 간단한 설명
+type: application
+version: "0.1.0" # 차트의 버전 맘대로 설정
+appVersion: "1.0.0" # 차트 안 app이 있다면  그 app 버전 여기선 의미없는 sample 버전

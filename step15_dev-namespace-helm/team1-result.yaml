@@ -1,0 +1,63 @@
+---
+# Source: dev-tenant-maker/templates/tenant-setup.yaml
+# dev-tenant-maker/templates/tenant-setup.yaml
+
+# [1단계] 개발용 Namespace 생성
+apiVersion: v1
+kind: Namespace
+# helm (go lang) 에서도 더블 브레이스를 쓴다
+metadata:
+  # .Values.<변수명>
+  name: dev
+---
+# Source: dev-tenant-maker/templates/tenant-setup.yaml
+# [2단계] 해당 namespace에서 사용할 수 있는 자원 제약 설치
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  # 문자열 이어 붙일때 에러 방지를 위해 "" 로 감싼다
+  name: "team1-quota"
+  namespace: dev
+spec:
+  hard:
+    # quota 는 object 이므로 quota.cpu로 참조
+    # 참조되는 결과값을 " " 로 묶고싶으면 | quote 를 추가한다.
+    requests.cpu: "2" # cpu 제한
+    requests.memory: "2Gi" # memory 제한
+    pods: "10" # pod 숫자
+    services: "5" # service 숫자
+---
+# Source: dev-tenant-maker/templates/tenant-setup.yaml
+# [3단계] 개발자 계정(ServiceAccount) 생성
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: team1
+  namespace: dev
+---
+# Source: dev-tenant-maker/templates/tenant-setup.yaml
+# [4단계] 계정용 로그인 토큰(Secret) 발행
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "team1-token"
+  namespace: dev
+  annotations:
+    kubernetes.io/service-account.name: "team1"
+type: kubernetes.io/service-account-token
+---
+# Source: dev-tenant-maker/templates/tenant-setup.yaml
+# [5단계] 해당 동네 안에서만 admin 노릇을 하라는 권한(RoleBinding) 임명
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "team1-admin-binding"
+  namespace: dev
+subjects:
+- kind: ServiceAccount
+  name: team1
+  namespace: dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
