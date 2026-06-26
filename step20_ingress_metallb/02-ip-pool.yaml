@@ -1,0 +1,9 @@
+# 02-ip-pool.yaml
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ip-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.16.8.30-172.16.8.50 # 배정할 ip 풀 설정
